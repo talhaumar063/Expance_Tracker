@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Tracker</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" 
+    rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" 
+    crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" 
+    integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" 
+    crossorigin="anonymous"></script>
+</head>
+<body>
+    <h2>Expense Tracker</h2>
+    <div class="container">
+        <form id="form" method='post'>
+            <div class="msg"></div>
+            <div class="form-control">
+                <label for="amount">Choose Expense Amount</label>
+                <input type="number" id="amount" placeholder="Enter amount...."/>
+            </div>
+            <div class="form-control">
+                <label for="desc">Choose Description</label>
+                <input type="text" id="desc" placeholder="Enter Desc..."> 
+            </div>
+            <div class="form-control">
+                <label for="drop">Choose Category:</label>
+                <select id="drop" name="cars">
+                    <option value="volvo">Fuel</option>
+                    <option value="saab">Electricity</option>
+                    <option value="fiat">Movie</option>
+                    <option value="audi">Food</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-secondary">Add Expense</button>
+        </form>
+        <span><ul id="Expenses"></ul></span>
+    </div>
+    <script src = "main.js"></script>
+</body>
+</html>
