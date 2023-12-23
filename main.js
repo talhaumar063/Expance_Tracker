@@ -1,58 +1,84 @@
 const myForm = document.querySelector('#form');
-const amountInput = document.querySelector('#amount');
-const DescInput = document.querySelector('#desc');
-const DropInput = document.querySelector('#drop');
+const amount = document.querySelector('#amount');
+const desc = document.querySelector('#desc');
+const drop = document.querySelector('#drop');
 const ExpenseList = document.querySelector('#Expenses');
 
+myForm.addEventListener('submit',addTransaction);
 
-myForm.addEventListener('submit', onSubmit);
-function onSubmit(e) {
-    e.preventDefault();
-    if(amountInput.value === '' || DescInput.value === '' || DropInput.value === '') {
-        alert("Enter full detail");
-    } else {
-      let Myobj = {
-        amount : e.target.amount.value,
-        Description : e.target.desc.value,
-        Drop : e.target.drop.value
-    };
-    
-    const storedFormData = JSON.parse(localStorage.getItem('Myobj')) || [];
-    storedFormData.push(Myobj);
+const localStorageTransactions = JSON.parse(localStorage.getItem('Expense'));
   
-    localStorage.setItem(Myobj.amount , JSON.stringify(storedFormData));
-      const li = document.createElement('li');
-      li.appendChild(document.createTextNode(`<span>${amountInput.value}: ${DescInput.value}: ${DropInput.value}</span>`));
-      ExpenseList.appendChild(li);
-      amountInput.value = '';
-      DescInput.value = '';
-      DropInput.value = '';
+let Expense = localStorage.getItem('Expense') !== null ? localStorageTransactions : [];
 
-      
-  
-      // Delete button functionality
-      var dltbtn = document.createElement("BUTTON");
-      var t = document.createTextNode("Delete User");
-      dltbtn.onclick = () =>{
-        localStorage.removeItem(Myobj.amount);
-        ExpenseList.removeChild(li);
-      }
-      dltbtn.appendChild(t);
-      li.appendChild(dltbtn)
-      ExpenseList.appendChild(li);
-  
-      // Edit button functionality
-      var editbtn = document.createElement("BUTTON");
-      var t = document.createTextNode("Edit User");
-      editbtn.onclick = () =>{
-       console.log(document.getElementById('amount').value = Myobj.amount);
-        document.getElementById('desc').value = Myobj.desc;
-        document.getElementById('drop').value = Myobj.drop;
-        localStorage.removeItem(Myobj.amount);
-        ExpenseList.removeChild(li);
-      }
-      editbtn.appendChild(t);
-      li.appendChild(editbtn)
-      ExpenseList.appendChild(li);
+function addTransaction(e){
+  e.preventDefault();
+  if(amount.value.trim() === '' || desc.value.trim() === '' || drop.value.trim() === ''){
+    alert('please add text and amount')
+  }else{
+    const Myobj = {
+      id:generateID(),
+      amount:amount.value,
+      desc:desc.value,
+      drop:drop.value
     }
+
+    Expense.push(Myobj);
+
+    addTransactionDOM(Myobj);
+    updateLocalStorage();
+    amount.value='';
+    desc.value='';
+    drop.value='';
+
   }
+}
+
+function generateID(){
+  return Math.floor(Math.random()*1000000000);
+}
+
+function addTransactionDOM(Myobj) {
+  const item = document.createElement("li");
+
+  item.innerHTML = `
+    ${Myobj.amount} <span>${Myobj.desc}${Myobj.drop}</span>
+    <button class="delete-btn" onclick="removeTransaction(${Myobj.id})">Delete</button>
+    <button class="update-btn" onclick="updateTransaction('${Myobj.id}','${Myobj.amount}','${Myobj.desc}','${Myobj.drop}')">Update</button>
+    `;
+    ExpenseList.appendChild(item);
+    amount.value='';
+    desc.value='';
+    drop.value='';
+}
+
+function removeTransaction(id){
+  Expense = Expense.filter(Myobj => Myobj.id !== id);
+  updateLocalStorage();
+  Init();
+}
+function updateTransaction(id,amount,desc,drop){
+  const Myobj = {
+    id:generateID(),
+    amount:amount.value,
+    desc:desc.value,
+    drop:drop.value
+  }
+  console.log(Expense)
+  document.getElementById('amount').value = amount;
+  document.getElementById('desc').value = desc;
+  document.getElementById('drop').value = drop;
+  // removeTransaction(transaction.id)
+
+}
+
+function updateLocalStorage(){
+  localStorage.setItem('Expense',JSON.stringify(Expense));
+}
+
+function Init() {
+  ExpenseList.innerHTML = "";
+  Expense.forEach(addTransactionDOM);
+  //updateValues();
+}
+
+Init();
